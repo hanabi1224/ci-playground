@@ -2,13 +2,13 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -21,12 +21,56 @@ jobs:
     runs-on: windows-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
-    steps: 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Chocolatey Action
-        uses: crazy-max/ghaction-chocolatey@v1.4.0
+        uses: crazy-max/ghaction-chocolatey@v1
+        with:
+          args: -h
       - name: Install scoop
         shell: pwsh
         run: |
           iwr -useb get.scoop.sh | iex
           refreshenv
-          scoop install 7zip
+          scoop install 7zip curl wget
+      - name: Setup
+        run: |
+          &"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/amd64/msbuild.exe" -version
+          md build\Release\include
+          set LLVM_SYS_110_PREFIX=%cd%\build\Release
+          echo %LLVM_SYS_110_PREFIX%
+          curl -O -L https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/llvm-11.1.0.src.tar.xz
+          7z e -y llvm-11.1.0.src.tar.xz
+          7z x -y llvm-11.1.0.src.tar
+          cp -r llvm-11.1.0.src\include\llvm-c build\Release\include
+      - name: Before Build
+        run: >-
+          pushd build && 
+          cmake.exe
+          -DCMAKE_BUILD_TYPE=Release
+          -DLLVM_INCLUDE_TOOLS=ON
+          -DLLVM_OPTIMIZED_TABLEGEN=ON
+          -DLLVM_INCLUDE_EXAMPLES=OFF
+          -DLLVM_INCLUDE_TESTS=OFF
+          -DLLVM_INCLUDE_GO_TESTS=OFF
+          -DLLVM_INCLUDE_UTILS=OFF
+          -DLLVM_ENABLE_ZLIB=OFF
+          -DLLVM_ENABLE_TERMINFO=OFF
+          ./../llvm-11.1.0.src/
+      - name: Build
+        run: |
+          pushd build
+          cp -r include\llvm Release\include
+          &"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/amd64/msbuild.exe" -m /p:Configuration=Release INSTALL.vcxproj
+      # - name: Archive
+      #   run: |
+      #     pushd build/Release
+      #     7z a -r ./../llvm-11.1.0-windows.zip .
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: llvm-11.1.0-windows
+          path: build\Release
+          if-no-files-found: error
+          retention-days: 30
