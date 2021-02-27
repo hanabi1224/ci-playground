@@ -62,7 +62,7 @@ jobs:
         run: |
           pushd build
           cp -r include\llvm Release\include
-          &"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/amd64/msbuild.exe" -m /p:Configuration=Release INSTALL.vcxproj
+          cmake --build . --config Release --target INSTALL
       # - name: Archive
       #   run: |
       #     pushd build/Release
