@@ -36,6 +36,7 @@ jobs:
           scoop install 7zip curl wget
       - name: Setup
         run: |
+          &"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/amd64/msbuild.exe" -version
           md build\Release\include
           set LLVM_SYS_110_PREFIX=%cd%\build\Release
           echo %LLVM_SYS_110_PREFIX%
@@ -60,7 +61,7 @@ jobs:
       - name: Build
         run: |
           pushd build
-          "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/amd64/msbuild.exe" -m /p:Configuration=Release llvm-headers.vcxproj
+          &"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/amd64/msbuild.exe" -m /p:Configuration=Release llvm-headers.vcxproj
           cp -r include\llvm Release\include
           7z a llvm-11.1.0-windows.zip Release
       - name: Upload Artifacts
