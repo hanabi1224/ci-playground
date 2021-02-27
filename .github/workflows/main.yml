@@ -33,10 +33,7 @@ jobs:
         run: |
           iwr -useb get.scoop.sh | iex
           refreshenv
-          scoop install 7zip
-      - name: Build
-        shell: pwsh
-        run: a
+          scoop install 7zip curl wget
       - name: Setup
         run: |
           md build\Release\include
