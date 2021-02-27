@@ -34,3 +34,40 @@ jobs:
           iwr -useb get.scoop.sh | iex
           refreshenv
           scoop install 7zip
+      - name: Build
+        shell: pwsh
+        run: a
+      - name: Setup
+        run: |
+          md build\Release\include
+          set LLVM_SYS_110_PREFIX=%cd%\build\Release
+          echo %LLVM_SYS_110_PREFIX%
+          curl -O -L https://github.com/llvm/llvm-project/releases/download/llvmorg-11.1.0/llvm-11.1.0.src.tar.xz
+          7z e -y llvm-11.1.0.src.tar.xz
+          7z x -y llvm-11.1.0.src.tar
+          cp -r llvm-11.1.0.src\include\llvm-c build\Release\include
+      - name: Build
+        run: >-
+          pushd build &&
+          cmake.exe
+          -DCMAKE_BUILD_TYPE=Release
+          -DLLVM_INCLUDE_TOOLS=ON
+          -DLLVM_OPTIMIZED_TABLEGEN=ON
+          -DLLVM_INCLUDE_EXAMPLES=OFF
+          -DLLVM_INCLUDE_TESTS=OFF
+          -DLLVM_INCLUDE_GO_TESTS=OFF
+          -DLLVM_INCLUDE_UTILS=OFF
+          -DLLVM_ENABLE_ZLIB=OFF
+          -DLLVM_ENABLE_TERMINFO=OFF
+          ./../llvm-11.1.0.src/ &&
+          msbuild -m /p:Configuration=Release llvm-headers.vcxproj &&
+          cp -r include\llvm Release\include &&
+          7z a llvm-11.1.0-windows.zip Release
+          popd
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: llvm-11.1.0-windows
+          path: build\llvm-11.1.0-windows.zip
+          if-no-files-found: error
+          retention-days: 7
