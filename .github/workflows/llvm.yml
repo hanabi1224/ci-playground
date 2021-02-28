@@ -39,7 +39,7 @@ jobs:
           echo $Env:LLVM_SYS_110_PREFIX
           [Environment]::SetEnvironmentVariable("LLVM_SYS_110_PREFIX", $llvm_path, 'User')
           echo $Env:LLVM_SYS_110_PREFIX
-          curl -o llvm-11.1.0-windows.zip -L "https://pipelines.actions.githubusercontent.com/Vqcj3kfyLh5v0iNMpWLetDLo74kLAHzL2zIcIVJcyCK0yG4F7H/_apis/pipelines/1/runs/14/signedartifactscontent?artifactName=llvm-11.1.0-windows&urlExpires=2021-02-28T00%3A47%3A43.2755428Z&urlSigningMethod=HMACV1&urlSignature=70%2BagN5MEizYk8jHzhyYHYw6wJkwLDmNR7xX1DuUmLQ%3D"
+          curl -o llvm-11.1.0-windows.zip -L "https://github.com/hanabi1224/ci-playground/archive/llvm-windows-0.1-pre1.zip"
           7z e -y llvm-11.1.0-windows.zip
           dir $llvm_path
           git clone https://github.com/hanabi1224/wasmer
