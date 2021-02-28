@@ -32,7 +32,7 @@ jobs:
           scoop install 7zip curl wget
       - name: Setup
         run: |
-          $llvm_path = $pwd.ToString() + "\llvm-11.1.0-windows"
+          $llvm_path = $pwd.ToString() + "\ci-playground-llvm-windows-0.1-pre1"
           echo "LLVM_SYS_110_PREFIX=$llvm_path" >> $Env:GITHUB_ENV
           echo $Env:GITHUB_ENV
           cat $Env:GITHUB_ENV
