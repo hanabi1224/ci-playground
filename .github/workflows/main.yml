@@ -51,6 +51,7 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release
           -DLLVM_INCLUDE_TOOLS=ON
           -DLLVM_OPTIMIZED_TABLEGEN=ON
+          -DLLVM_STATIC_LINK_CXX_STDLIB=ON
           -DLLVM_INCLUDE_EXAMPLES=OFF
           -DLLVM_INCLUDE_TESTS=OFF
           -DLLVM_INCLUDE_GO_TESTS=OFF
@@ -62,7 +63,7 @@ jobs:
         run: |
           pushd build
           cp -r include\llvm Release\include
-          &"C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/MSBuild/Current/Bin/amd64/msbuild.exe" -m /p:Configuration=Release INSTALL.vcxproj
+          cmake --build . --config Release --target INSTALL
       # - name: Archive
       #   run: |
       #     pushd build/Release
