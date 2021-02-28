@@ -30,14 +30,12 @@ jobs:
           iwr -useb get.scoop.sh | iex
           refreshenv
           scoop install 7zip curl wget
-      - uses: actions/download-artifact@v2
-        with:
-          name: llvm-11.1.0-windows
       - name: Setup
         run: |
           $llvm_path = $pwd.ToString() + "\llvm-11.1.0-windows"
           [Environment]::SetEnvironmentVariable("LLVM_SYS_110_PREFIX", $llvm_path, 'User')
           echo $Env:LLVM_SYS_110_PREFIX
+          curl -o llvm-11.1.0-windows.zip -L "https://pipelines.actions.githubusercontent.com/Vqcj3kfyLh5v0iNMpWLetDLo74kLAHzL2zIcIVJcyCK0yG4F7H/_apis/pipelines/1/runs/14/signedartifactscontent?artifactName=llvm-11.1.0-windows&urlExpires=2021-02-28T00%3A47%3A43.2755428Z&urlSigningMethod=HMACV1&urlSignature=70%2BagN5MEizYk8jHzhyYHYw6wJkwLDmNR7xX1DuUmLQ%3D"
           7z e -y llvm-11.1.0-windows.zip
           set LLVM_SYS_110_PREFIX=%cd%\llvm-11.1.0-windows
           echo %LLVM_SYS_110_PREFIX%
