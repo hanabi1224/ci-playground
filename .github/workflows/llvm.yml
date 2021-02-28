@@ -32,7 +32,7 @@ jobs:
           scoop install 7zip curl wget
       - name: Setup
         run: |
-          $llvm_path = $pwd.ToString() + "\ci-playground-llvm-windows-0.1-pre1"
+          $llvm_path = $pwd.ToString() + "\llvm-11.1.0-windows"
           echo "LLVM_SYS_110_PREFIX=$llvm_path" >> $Env:GITHUB_ENV
           echo $Env:GITHUB_ENV
           cat $Env:GITHUB_ENV
@@ -40,7 +40,7 @@ jobs:
           [Environment]::SetEnvironmentVariable("LLVM_SYS_110_PREFIX", $llvm_path, 'User')
           echo $Env:LLVM_SYS_110_PREFIX
           curl -o llvm-11.1.0-windows.zip -L "https://github.com/hanabi1224/ci-playground/releases/download/llvm-windows-0.1-pre1/llvm-11.1.0-windows.zip"
-          7z e -y llvm-11.1.0-windows.zip
+          7z x -y llvm-11.1.0-windows.zip
           dir
           dir $llvm_path
           git clone https://github.com/hanabi1224/wasmer
