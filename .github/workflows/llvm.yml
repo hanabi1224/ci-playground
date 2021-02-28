@@ -53,6 +53,7 @@ jobs:
       - name: Build cli
         run: |
           pushd wasmer/lib/cli
+          cargo build --features llvm
           cargo build --release --features llvm
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
