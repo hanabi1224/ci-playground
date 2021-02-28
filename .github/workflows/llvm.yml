@@ -40,7 +40,7 @@ jobs:
           [Environment]::SetEnvironmentVariable("LLVM_SYS_110_PREFIX", $llvm_path, 'User')
           echo $Env:LLVM_SYS_110_PREFIX
           curl -o llvm-11.1.0-windows.zip -L "https://github.com/hanabi1224/ci-playground/releases/download/llvm-windows-0.1-pre1/llvm-11.1.0-windows.zip"
-          7z x -y llvm-11.1.0-windows.zip
+          7z x -y -r -ollvm-11.1.0-windows llvm-11.1.0-windows.zip
           dir
           dir $llvm_path
           git clone https://github.com/hanabi1224/wasmer
