@@ -33,9 +33,9 @@ jobs:
       - name: Setup
         run: |
           $llvm_path = $pwd.ToString() + "\llvm-11.1.0-windows"
-          echo "LLVM_SYS_110_PREFIX=$llvm_path" >> $GITHUB_ENV
-          echo $GITHUB_ENV
-          cat $GITHUB_ENV
+          echo "LLVM_SYS_110_PREFIX=$llvm_path" >> $Env:GITHUB_ENV
+          echo $Env:GITHUB_ENV
+          cat $Env:GITHUB_ENV
           [Environment]::SetEnvironmentVariable("LLVM_SYS_110_PREFIX", $llvm_path, 'User')
           echo $Env:LLVM_SYS_110_PREFIX
           curl -o llvm-11.1.0-windows.zip -L "https://pipelines.actions.githubusercontent.com/Vqcj3kfyLh5v0iNMpWLetDLo74kLAHzL2zIcIVJcyCK0yG4F7H/_apis/pipelines/1/runs/14/signedartifactscontent?artifactName=llvm-11.1.0-windows&urlExpires=2021-02-28T00%3A47%3A43.2755428Z&urlSigningMethod=HMACV1&urlSignature=70%2BagN5MEizYk8jHzhyYHYw6wJkwLDmNR7xX1DuUmLQ%3D"
