@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: WASMER-LLVM-WINDOWS
 
 # Controls when the action will run.
 on:
@@ -30,9 +30,14 @@ jobs:
           iwr -useb get.scoop.sh | iex
           refreshenv
           scoop install 7zip curl wget
+      - uses: actions/download-artifact@v2
+        with:
+          name: llvm-11.1.0-windows
       - name: Setup
         run: |
-          curl -o llvm-11.1.0-windows.zip -L https://github.com/hanabi1224/ci-playground/suites/2139951212/artifacts/43778875
+          $llvm_path = $pwd.ToString() + "\llvm-11.1.0-windows"
+          [Environment]::SetEnvironmentVariable("LLVM_SYS_110_PREFIX", $llvm_path, 'User')
+          echo $Env:LLVM_SYS_110_PREFIX
           7z e -y llvm-11.1.0-windows.zip
           set LLVM_SYS_110_PREFIX=%cd%\llvm-11.1.0-windows
           echo %LLVM_SYS_110_PREFIX%
@@ -41,7 +46,7 @@ jobs:
           git checkout win_llvm
       - name: Build
         run: |
-          echo %LLVM_SYS_110_PREFIX%
+          echo $Env:LLVM_SYS_110_PREFIX
           pushd wasmer/lib/cli
           cargo build --release --features llvm
       - name: Upload Artifacts
