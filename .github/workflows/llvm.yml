@@ -41,6 +41,7 @@ jobs:
           echo $Env:LLVM_SYS_110_PREFIX
           curl -o llvm-11.1.0-windows.zip -L "https://github.com/hanabi1224/ci-playground/archive/llvm-windows-0.1-pre1.zip"
           7z e -y llvm-11.1.0-windows.zip
+          dir
           dir $llvm_path
           git clone https://github.com/hanabi1224/wasmer
           pushd wasmer
