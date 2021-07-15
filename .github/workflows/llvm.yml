@@ -39,8 +39,7 @@ jobs:
           echo $Env:LLVM_SYS_110_PREFIX
           [Environment]::SetEnvironmentVariable("LLVM_SYS_110_PREFIX", $llvm_path, 'User')
           echo $Env:LLVM_SYS_110_PREFIX
-          # curl -o llvm-11.1.0-windows.zip -L "https://github.com/hanabi1224/ci-playground/releases/download/llvm-windows-0.1-pre1/llvm-11.1.0-windows.zip"
-          curl -o llvm-11.1.0-windows.zip -L  https://github.com/hanabi1224/ci-playground/suites/3248957207/artifacts/75502254
+          curl -o llvm-11.1.0-windows.zip -L "https://github.com/hanabi1224/ci-playground/releases/download/llvm-windows-11.1.0-pre2/llvm-11.1.0-windows.zip"
           7z x -o"llvm-11.1.0-windows" -y -r llvm-11.1.0-windows.zip
           dir
           dir $llvm_path
@@ -54,12 +53,27 @@ jobs:
       - name: Build cli
         run: |
           pushd wasmer/lib/cli
-          cargo build --features llvm
+          # cargo build --features llvm
           cargo build --release --features llvm
-      - name: Upload Artifacts
+      - name: Test windows cli
+        run: |
+          cp wasmer/target/release/wasmer.exe wasmer.exe
+          wasmer --llvm app.wasm
+      - name: Build c-api
+        run: |
+          pushd wasmer/lib/c-api
+          cargo build --release --features default,llvm,dylib
+      - name: Upload Artifacts CLI
         uses: actions/upload-artifact@v2
         with:
           name: wasmer.exe
           path: wasmer/target/release/wasmer.exe
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload Artifacts dylib
+        uses: actions/upload-artifact@v2
+        with:
+          name: wasmer.dll
+          path: wasmer/target/release/wasmer.dll
           if-no-files-found: error
           retention-days: 30
