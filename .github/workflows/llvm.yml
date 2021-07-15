@@ -39,7 +39,7 @@ jobs:
           echo $Env:LLVM_SYS_110_PREFIX
           [Environment]::SetEnvironmentVariable("LLVM_SYS_110_PREFIX", $llvm_path, 'User')
           echo $Env:LLVM_SYS_110_PREFIX
-          curl -o llvm-11.1.0-windows.zip -L "https://github.com/hanabi1224/ci-playground/releases/download/llvm-windows-11.1.0-pre2/llvm-11.1.0-windows.zip"
+          curl -o llvm-11.1.0-windows.zip -L "https://github.com/hanabi1224/llvm-custom-builds/releases/download/llvm-11.1.0-windows-pre1/llvm-11.1.0-windows.zip"
           7z x -o"llvm-11.1.0-windows" -y -r llvm-11.1.0-windows.zip
           dir
           dir $llvm_path
@@ -53,15 +53,15 @@ jobs:
       - name: Build cli
         run: |
           pushd wasmer/lib/cli
-          # cargo build --features llvm
-          cargo build --release --features llvm
+          cargo build --release --features default,llvm,cranelift
       - name: Test windows cli
         run: |
           wasmer/target/release/wasmer.exe --llvm app.wasm
+          wasmer/target/release/wasmer.exe --cranelift app.wasm
       - name: Build c-api
         run: |
           pushd wasmer/lib/c-api
-          cargo build --release --features default,llvm,dylib
+          cargo build --release --features default,llvm,cranelift
       - name: Upload Artifacts CLI
         uses: actions/upload-artifact@v2
         with:
