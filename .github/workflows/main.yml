@@ -50,7 +50,6 @@ jobs:
           cmake
           -Thost=x64
           -DCMAKE_BUILD_TYPE=Release
-          -DLLVM_ENABLE_PROJECTS="clang;lld"
           -DLLVM_STATIC_LINK_CXX_STDLIB=ON
           -DLLVM_INCLUDE_TOOLS=ON
           -DLLVM_OPTIMIZED_TABLEGEN=ON
