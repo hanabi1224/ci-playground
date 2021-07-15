@@ -57,8 +57,7 @@ jobs:
           cargo build --release --features llvm
       - name: Test windows cli
         run: |
-          cp wasmer/target/release/wasmer.exe wasmer.exe
-          wasmer --llvm app.wasm
+          wasmer/target/release/wasmer.exe --llvm app.wasm
       - name: Build c-api
         run: |
           pushd wasmer/lib/c-api
